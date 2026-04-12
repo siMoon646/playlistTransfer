@@ -1,0 +1,2 @@
+V 0.1.0
+Added Spotify authentication routing, controllers, and logic
