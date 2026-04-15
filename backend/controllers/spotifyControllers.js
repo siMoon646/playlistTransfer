@@ -1,4 +1,4 @@
-import { fetchTokens, fetchPlaylists } from "../models/spotifyModel.js";
+import { exchangeCodeForTokens, fetchPlaylists, fetchPlaylistTracks } from "../models/spotifyModel.js";
 
 // Only requesting this scope of permissions. We only want access to user's private playlists and collaborative playlists. Nothing else.
 const SCOPES = ["playlist-read-private", "playlist-read-collaborative"].join(
@@ -28,39 +28,55 @@ export async function callback(req, res) {
     const { code } = req.query;
 
     try {
-        // retrieves tokens from the code from login
-        const tokens = await fetchTokens(code);
-        // creates a 'accessToken' field for an Express session object and stores the spotify access token in it.
-        // saved to the session for future API access
-        req.session.accessToken = tokens.access_token;
-        // creates a 'refreshToken' field for an Express session object and stores the spotify refresh token in it.
-        // Used for getting a new token when the previous access token expires.
-        req.session.refreshToken = tokens.refresh_token;
-        // redirects to the frontend root.
-        res.redirect("http://localhost:5173");
-        // something went wrong
+        const tokens = await exchangeCodeForTokens(code);
+        req.session.spotifyAccessToken = tokens.access_token;
+        req.session.spotifyRefreshToken = tokens.refresh_token;
+        res.redirect('http://localhost:5173');
     } catch (err) {
-        console.error("Spotify callback error:", err.message);
-        res.status(500).send("Authentication failed");
+        console.error('Spotify callback error:', err.message);
+        res.status(500).send('Spotify authentication failed');
     }
 }
 
 export async function getPlaylists(req, res) {
     // if there is no access token -> user is not logged in
-    if (!req.session.accessToken) {
+    if (!req.session.spotifyAccessToken) {
         // 401 -> you need to be logged in to do this
         return res.status(401).json({ error: "Not logged in" });
     }
 
     try {
-        // call and wait for the fetchPlaylists function from the model directory and store its result in playlist. Authorized by the spotify access token)
-        const playlists = await fetchPlaylists(req.session.accessToken);
+        // call and wait for the fetchPlaylists function from the model directory and store its result in playlist. Authorized by the spotify access token
+        const playlists = await fetchPlaylists(req.session.spotifyAccessToken);
         // respond by sending back playlists as json data.
         res.json(playlists);
-    // something went wrong
+        // something went wrong
     } catch (err) {
         console.error("Error fetching playlists:", err.message);
         // 500 -> something went wrong server-side.
         res.status(500).json({ error: "Failed to fetch playlists" });
+    }
+}
+
+export async function getPlaylistTracks(req, res) {
+    console.log('playlistId:', req.params.playlistId);
+
+    // if there is no access tolen -> user is not logged in
+    if (!req.session.spotifyAccessToken) {
+        // 401 -> you need to be logged in to do this
+        return res.status(401).json({ error: "Not logged in" });
+    }
+
+    try {
+        // call and wait for the fetchTracks function from the model directory and store its result in tracks. Authorized by the spotify access token
+        // req.session.accessToken comes from login endpoint
+        const tracks = await fetchPlaylistTracks(req.session.spotifyAccessToken, req.params.playlistId);
+        // respond by sending back tracks as json data.
+        res.json(tracks);
+        // something went wrong
+    } catch (err) {
+        console.error("Error fetching tracks: ", err.message);
+        // 500 -> something went wrong server-side.
+        res.status(500).json({ error: "Failed to fetch tracks" });
     }
 }

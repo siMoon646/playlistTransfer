@@ -14,3 +14,5 @@ logs/
 # OS files
 .DS_Store
 Thumbs.db
+
+to-do-list.txt
