@@ -9,12 +9,19 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors()); // Allows your React app to communicate with this server
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+})); // Allows your React app to communicate with this server
 app.use(express.json()); // Allows the server to read JSON data in POST requests
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+        secure: false, // false for localhost (no HTTPS)
+        sameSite: 'lax'
+    }
 }))
 
 // any endpoint involving '/spotify' is handled with a router object from the spotifyRoutes.js file.

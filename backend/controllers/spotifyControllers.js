@@ -28,10 +28,17 @@ export async function callback(req, res) {
     const { code } = req.query;
 
     try {
+        // retrieves tokens from the code from login
         const tokens = await exchangeCodeForTokens(code);
+        // creates a 'accessToken' field for an Express session object and stores the spotify access token in it.
+        // saved to the session for future API access
         req.session.spotifyAccessToken = tokens.access_token;
+        // creates a 'refreshToken' field for an Express session object and stores the spotify refresh token in it.
+        // Used for getting a new token when the previous access token expires.
         req.session.spotifyRefreshToken = tokens.refresh_token;
+        // redirects to the frontend root.
         res.redirect('http://localhost:5173');
+         // something went wrong
     } catch (err) {
         console.error('Spotify callback error:', err.message);
         res.status(500).send('Spotify authentication failed');

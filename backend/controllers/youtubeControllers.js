@@ -1,19 +1,25 @@
-import { exchangeCodeForTokens, getVideo, makePlaylist, addVideoToPlaylist } from '../models/youtubeModel.js';
+import {
+    exchangeCodeForTokens,
+    getVideo,
+    fetchPlaylists,
+    makePlaylist,
+    addVideoToPlaylist,
+} from "../models/youtubeModel.js";
 
 export function login(req, res) {
-    const SCOPES = [
-        'https://www.googleapis.com/auth/youtube',
-    ].join(' ');
+    const SCOPES = ["https://www.googleapis.com/auth/youtube"].join(" ");
 
     const params = new URLSearchParams({
         client_id: process.env.YOUTUBE_CLIENT_ID,
         redirect_uri: process.env.YOUTUBE_REDIRECT_URI,
-        response_type: 'code',
+        response_type: "code",
         scope: SCOPES,
-        access_type: 'offline', // google specific param, equivalent to refresh token functionality.
+        access_type: "offline", // google specific param, equivalent to refresh token functionality.
     });
 
-    res.redirect('https://accounts.google.com/o/oauth2/v2/auth?' + params.toString());
+    res.redirect(
+        "https://accounts.google.com/o/oauth2/v2/auth?" + params.toString(),
+    );
 }
 
 export async function callback(req, res) {
@@ -41,7 +47,10 @@ export async function callback(req, res) {
 export async function search(req, res) {
     const { q } = req.query; // https://developers.google.com/youtube/v3/docs/search/list q - string - represents the query term to search for on the YouTube API
     // req.query.q is undefined/""/null or any other falsy value.
-    if (!query) return res.status(400).json({ error: "Missing search query parameter 'q'" });
+    if (!query)
+        return res
+            .status(400)
+            .json({ error: "Missing search query parameter 'q'" });
 
     try {
         // getVideo function returns video based on given query(q) and stores in result
@@ -54,6 +63,25 @@ export async function search(req, res) {
     }
 }
 
+export async function getPlaylists(req, res) {
+    console.log('Session on /playlists hit:', req.session);
+    if (!req.session.youtubeAccessToken) {
+        return res.status(401).json({ error: " yeah, Not logged in" });
+    }
+
+    try {
+        // call and wait for the fetchPlaylists function from the model directory and store its result in playlist. Authorized by the YouTube access token
+        const playlists = await fetchPlaylists(req.session.youtubeAccessToken);
+        // respond by sending back playlists as json data.
+        res.json(playlists);
+        // something went wrong
+    } catch (err) {
+        console.error("Error fetching playlists this one:", err.message);
+        // 500 -> something went wrong server-side.
+        res.status(500).json({ error: "Failed to fetch playlists this one" });
+    }
+}
+
 export async function createPlaylist(req, res) {
     const { title, description } = req.body; // grabs 'title' and 'description' fields from request body and stores in corresponding variables
     // hard check for title, because YouTube requires playlists have titles. Absent description fine.
@@ -61,7 +89,11 @@ export async function createPlaylist(req, res) {
 
     try {
         // makePlaylist function creates a playlist on YouTube's end. Stores the result of the action in 'playlistCreationResult'
-        const playlistCreationResult = await makePlaylist(title, description ?? "", req.session.youtubeAccessToken); // description is optional, as noted by '??' <nullish coalescing operator>. Empty string if (null or undef)
+        const playlistCreationResult = await makePlaylist(
+            title,
+            description ?? "",
+            req.session.youtubeAccessToken,
+        ); // description is optional, as noted by '??' <nullish coalescing operator>. Empty string if (null or undef)
         // serializes the result resource as JSON and sends it as response
         res.status(201).json(playlistCreationResult); // status code 201 - created
     } catch (err) {
@@ -74,11 +106,16 @@ export async function addToPlaylist(req, res) {
     const { playlistId } = req.params; // grabs playlistId from URL path params <seperated by '/'> -> store in playlistId
     const { videoId } = req.body; // grabs videoId from field of request body -> store in videoId
     // no videoId = no video. Stop
-    if (!videoId) return res.status(400).json({ error: "Missing videoId in request body" });
+    if (!videoId)
+        return res.status(400).json({ error: "Missing videoId in request body" });
 
     try {
         // addVideoToPlaylist function adds video to playlist on Youtube's end and returns data regarding the completion of the action
-        const additionResult = await addVideoToPlaylist(playlistId, videoId, req.session.youtubeAccessToken);
+        const additionResult = await addVideoToPlaylist(
+            playlistId,
+            videoId,
+            req.session.youtubeAccessToken,
+        );
         // serializes the result as JSON and sends as response
         res.status(201).json(additionResult); // status code 201 - created
     } catch (err) {
@@ -86,4 +123,3 @@ export async function addToPlaylist(req, res) {
         res.status(500).json({ error: "Failed to add video to playlist" });
     }
 }
-
