@@ -15,9 +15,9 @@ export async function exchangeCodeForTokens(code) {
       // below is for authorization, the clientID and Secret are encoded and sent to Spotify to prove the identity of the app making the request
       Authorization: // spotify requires that the client ID and secret be sent in the header with base 64 encoding.
         "Basic " +
-        Buffer.from( 
+        Buffer.from(
           process.env.SPOTIFY_CLIENT_ID +
-            ":" +
+          ":" +
           process.env.SPOTIFY_CLIENT_SECRET,
         ).toString("base64"),
     },

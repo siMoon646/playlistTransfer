@@ -15,6 +15,7 @@ export function login(req, res) {
         response_type: "code",
         scope: SCOPES,
         access_type: "offline", // google specific param, equivalent to refresh token functionality.
+        prompt: 'consent' // Google issues a refresh token every login
     });
 
     res.redirect(
@@ -29,10 +30,10 @@ export async function callback(req, res) {
     try {
         // retrieves tokens from the code from login
         const tokens = await exchangeCodeForTokens(code);
-        // creates a 'spotifyAccessToken' field for an Express session object and stores the spotify access token in it.
+        // creates a 'youtubeAccessToken' field for an Express session object and stores the YouTube access token in it.
         // saved to the session for future API access
         req.session.youtubeAccessToken = tokens.access_token;
-        // creates a 'spotifyRefreshToken' field for an Express session object and stores the spotify refresh token in it.
+        // creates a 'youtubeRefreshToken' field for an Express session object and stores the YouTube refresh token in it.
         // Used for getting a new token when the previous access token expires.
         req.session.youtubeRefreshToken = tokens.refresh_token;
         // redirects to the frontend root.
@@ -45,9 +46,11 @@ export async function callback(req, res) {
 }
 
 export async function search(req, res) {
+    console.log('Full req.query object:', req.query); // ADD THIS LINE
     const { q } = req.query; // https://developers.google.com/youtube/v3/docs/search/list q - string - represents the query term to search for on the YouTube API
+    console.log('Extracted q value:', q); // ADD THIS LINE
     // req.query.q is undefined/""/null or any other falsy value.
-    if (!query)
+    if (!q)
         return res
             .status(400)
             .json({ error: "Missing search query parameter 'q'" });

@@ -30,10 +30,10 @@ export async function callback(req, res) {
     try {
         // retrieves tokens from the code from login
         const tokens = await exchangeCodeForTokens(code);
-        // creates a 'accessToken' field for an Express session object and stores the spotify access token in it.
+        // creates a 'spotifyAccessToken' field for an Express session object and stores the spotify access token in it.
         // saved to the session for future API access
         req.session.spotifyAccessToken = tokens.access_token;
-        // creates a 'refreshToken' field for an Express session object and stores the spotify refresh token in it.
+        // creates a 'spotifyRefreshToken' field for an Express session object and stores the spotify refresh token in it.
         // Used for getting a new token when the previous access token expires.
         req.session.spotifyRefreshToken = tokens.refresh_token;
         // redirects to the frontend root.
@@ -53,7 +53,7 @@ export async function getPlaylists(req, res) {
     }
 
     try {
-        // call and wait for the fetchPlaylists function from the model directory and store its result in playlist. Authorized by the spotify access token
+        // call and wait for the fetchPlaylists function from the model directory and store its result in playlists. Authorized by the spotify access token
         const playlists = await fetchPlaylists(req.session.spotifyAccessToken);
         // respond by sending back playlists as json data.
         res.json(playlists);
@@ -75,8 +75,8 @@ export async function getPlaylistTracks(req, res) {
     }
 
     try {
-        // call and wait for the fetchTracks function from the model directory and store its result in tracks. Authorized by the spotify access token
-        // req.session.accessToken comes from login endpoint
+        // call and wait for the fetchPlaylistTracks function from the model directory and store its result in tracks. Authorized by the spotify access token
+        // req.session.spotifyAccessToken comes from login endpoint
         const tracks = await fetchPlaylistTracks(req.session.spotifyAccessToken, req.params.playlistId);
         // respond by sending back tracks as json data.
         res.json(tracks);
