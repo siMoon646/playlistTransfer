@@ -7,8 +7,16 @@ import {
 } from "../models/youtubeModel.js";
 
 export function login(req, res) {
+    console.log("\n--YouTube login function called--\n");
+    console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);
+
+
     const SCOPES = ["https://www.googleapis.com/auth/youtube"].join(" ");
 
+    if(req.session.youtubeAccessToken){ // session already has YouTube access token. Further login logic not needed.
+        return res.redirect(process.env.FRONTEND_BASE_URL);
+    }
+    
     const params = new URLSearchParams({
         client_id: process.env.YOUTUBE_CLIENT_ID,
         redirect_uri: process.env.YOUTUBE_REDIRECT_URI,
@@ -24,6 +32,8 @@ export function login(req, res) {
 }
 
 export async function callback(req, res) {
+    console.log("\n--YouTube callback function called--\n");
+
     // the query object has a field called "code", this line pulls the code field from the query and stores it in a local variable called "code"
     const { code } = req.query;
 
@@ -36,8 +46,16 @@ export async function callback(req, res) {
         // creates a 'youtubeRefreshToken' field for an Express session object and stores the YouTube refresh token in it.
         // Used for getting a new token when the previous access token expires.
         req.session.youtubeRefreshToken = tokens.refresh_token;
-        // redirects to the frontend root.
-        res.redirect("http://localhost:5173");
+        // if missing the the other token, stay on login
+        if(!req.session.spotifyAccessToken){
+            // redirects to the frontend root.
+            res.redirect("http://127.0.0.1:5173/login");
+        } else { // if have both access tokens -> go home page
+            res.redirect("http://127.0.0.1:5173/home");
+        }
+        
+    console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);
+
         // something went wrong
     } catch (err) {
         console.error("YouTube callback error:", err.message);

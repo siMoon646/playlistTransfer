@@ -1,8 +1,8 @@
 import express from "express";
-import { convert } from "../controllers/convertController.js";
+import { convert } from "../controllers/convertControllers.js";
  
 const router = express.Router();
  
-router.post("/", convert);
+router.post("/convert", convert);
  
 export default router;
