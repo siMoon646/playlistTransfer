@@ -36,10 +36,10 @@ export async function convertSpotifyTracksToYouTubePlaylist(
                 // YouTube returned no results for this query
                 results.failed.push({ track: query, reason: "No YouTube results found" });
                 continue;
-            }
+            } 
 
-            // if function made it to this line, that means that a track exists, we need its YouTube videoId.
             const videoId = video.id.videoId;
+            const videoTitle = video.snippet.title;
 
             // add the top result to the YouTube playlist
             // note: controller verified the target playlist, so we know this is the target playlist in the param below
@@ -49,8 +49,9 @@ export async function convertSpotifyTracksToYouTubePlaylist(
             results.succeeded.push({
                 spotifyTrack: query,
                 youtubeVideoId: videoId,
-                youtubeTitle: video.snippet.title,
+                youtubeTitle: videoTitle,
             });
+
         } catch (err) {
             results.failed.push({ track: query, reason: err.message });
         }

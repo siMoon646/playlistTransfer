@@ -33,7 +33,6 @@ export async function exchangeCodeForTokens(code) {
 
 // function for retrieving user playlists:
 export async function fetchPlaylists(accessToken) {
-  console.log(accessToken);
   // fetching from dynamic endpoint for user playlists
   const response = await fetch(`${BASE_URL}/me/playlists`, {
     // sends the fetch request as the bearer of the access token -> uses authority to fetch from the playlists endpoint.
@@ -66,9 +65,9 @@ export async function fetchPlaylistTracks(accessToken, playlistId) {
 
   // returns a new array containing track objects consisting of track names and artist name(s)
   const data = await response.json();
-  return data.items.map((item) => ({
-    title: item.item.name,
+  return data.items.map((track) => ({ // items <-> tracks
+    title: track.item.name, // track.informationAboutTrack.name
     // there may be multiple artists for one track, so their names are joined by ', '
-    artist: item.item.artists.map((a) => a.name).join(", "),
+    artist: track.item.artists.map((a) => a.name).join(", "),
   }));
 }

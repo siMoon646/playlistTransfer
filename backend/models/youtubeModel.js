@@ -71,7 +71,7 @@ export async function fetchPlaylists(accessToken) {
     return data.items;
 }
 
-export async function makePlaylist(title, description, accessToken) {
+export async function makePlaylist(title, accessToken) {
     const response = await fetch(`${BASE_URL}/playlists?part=snippet,status`, {
         method: "POST", // CRUD -> create request
         headers: {
@@ -82,7 +82,6 @@ export async function makePlaylist(title, description, accessToken) {
         body: JSON.stringify({ // serializing JSON data -> adjusted for promise made in the header (Content-Type:"application/json")
             snippet: {
                 title: title, // title of the playlist
-                description: description, // description of playlist 
             },
             status: {
                 privacyStatus: "private", // Defaulting to private for the user's safety

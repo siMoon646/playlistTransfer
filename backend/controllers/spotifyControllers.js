@@ -8,7 +8,7 @@ const SCOPES = ["playlist-read-private", "playlist-read-collaborative"].join(
 // getting a code to exchange for an access token from spotify API
 export function login(req, res) {
     console.log("\n--Called spotify login--\n");
-    console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);
+    // console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);
 
     if(req.session.spotifyAccessToken){ // already have Spotify access token, no further login logic needed.
         return res.redirect(process.env.FRONTEND_BASE_URL);        
@@ -84,8 +84,9 @@ export async function getPlaylists(req, res) {
         res.status(500).json({ error: "Failed to fetch playlists" });
     }
 }
-
 export async function getPlaylistTracks(req, res) {
+    console.log("\n--Spotify getPlaylistTracks function called--\n");
+
     // if there is no access tolen -> user is not logged in
     if (!req.session.spotifyAccessToken) {
         // 401 -> you need to be logged in to do this

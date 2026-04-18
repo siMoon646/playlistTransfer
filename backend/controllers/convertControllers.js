@@ -2,11 +2,15 @@ import { convertSpotifyTracksToYouTubePlaylist } from "../models/convertModel.js
 
 export async function convert(req, res) {
     const { spotifyPlaylistId, youtubePlaylistId } = req.body;
- 
+    console.log("---")
+    console.log(spotifyPlaylistId);
+    console.log("---")
+    console.log(youtubePlaylistId);
+    console.log("---")
     // Verify that we have a source and a target.
     if (!spotifyPlaylistId || !youtubePlaylistId) { // checks for falsy values--the empty string or undefined in this case.
         return res.status(400).json({ // 400 - bad req
-            error: "Missing required fields: spotifyPlaylistId and youtubePlaylistId",
+            error: "Missing required fields: spotifyPlaylistId or youtubePlaylistId",
         });
     }
  

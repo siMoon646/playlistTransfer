@@ -8,7 +8,7 @@ import {
 
 export function login(req, res) {
     console.log("\n--YouTube login function called--\n");
-    console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);
+    // console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);
 
 
     const SCOPES = ["https://www.googleapis.com/auth/youtube"].join(" ");
@@ -64,6 +64,8 @@ export async function callback(req, res) {
 }
 
 export async function search(req, res) {
+    console.log("\n--YouTube search function called--\n");
+
     console.log('Full req.query object:', req.query); // ADD THIS LINE
     const { q } = req.query; // https://developers.google.com/youtube/v3/docs/search/list q - string - represents the query term to search for on the YouTube API
     console.log('Extracted q value:', q); // ADD THIS LINE
@@ -85,9 +87,12 @@ export async function search(req, res) {
 }
 
 export async function getPlaylists(req, res) {
-    console.log('Session on /playlists hit:', req.session);
+    console.log("\n--YouTube getPlaylists function called--\n");
+
+    console.log(req.session.youtubeAccessToken);
+
     if (!req.session.youtubeAccessToken) {
-        return res.status(401).json({ error: " yeah, Not logged in" });
+        return res.status(401).json({ error: "yeah, Not logged in" });
     }
 
     try {
@@ -104,17 +109,18 @@ export async function getPlaylists(req, res) {
 }
 
 export async function createPlaylist(req, res) {
-    const { title, description } = req.body; // grabs 'title' and 'description' fields from request body and stores in corresponding variables
-    // hard check for title, because YouTube requires playlists have titles. Absent description fine.
+    console.log("\n--YouTube createPlaylist function called--\n");
+    
+    const { title } = req.body; // grabs 'title' from request body and stores in corresponding variables
+    console.log(title);
     if (!title) return res.status(400).json({ error: "Missing playlist title" });
 
     try {
         // makePlaylist function creates a playlist on YouTube's end. Stores the result of the action in 'playlistCreationResult'
         const playlistCreationResult = await makePlaylist(
             title,
-            description ?? "",
             req.session.youtubeAccessToken,
-        ); // description is optional, as noted by '??' <nullish coalescing operator>. Empty string if (null or undef)
+        );
         // serializes the result resource as JSON and sends it as response
         res.status(201).json(playlistCreationResult); // status code 201 - created
     } catch (err) {
@@ -124,6 +130,8 @@ export async function createPlaylist(req, res) {
 }
 
 export async function addToPlaylist(req, res) {
+    console.log("\n--YouTube addToPlaylist function called--\n");
+
     const { playlistId } = req.params; // grabs playlistId from URL path params <seperated by '/'> -> store in playlistId
     const { videoId } = req.body; // grabs videoId from field of request body -> store in videoId
     // no videoId = no video. Stop
