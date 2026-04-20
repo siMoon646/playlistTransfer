@@ -1,4 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import Step1 from "./subcomponents/Step1"
+import Step2 from "./subcomponents/Step2"
+import Step3 from "./subcomponents/Step3"
+import Step4 from "./subcomponents/Step4"
 
 export default function HomePage() {
   const [step, setStep] = useState(1); // represents where the user is in the decision-making process
@@ -6,10 +10,6 @@ export default function HomePage() {
 
   // states and variables pertaining to destination playlist:
   const [destinationPlaylistName, setDestinationPlaylistName] = useState(''); // contains the custom name the user provides if they chose to make a new playlist for tracks
-  const isNameEmpty = (destinationPlaylistName.trim() === ''); // checks if the name is empty
-  const hasInvalidChars = /[<>\u2028]/.test(destinationPlaylistName); // playlist names cannot contain '<', '>', or '\u2028'
-  const isNameTooLong = destinationPlaylistName.length > 150; // YouTube doesn't allow playlist names > 150 chars
-  const isNameValid = !isNameEmpty && !hasInvalidChars && !isNameTooLong;
   const [youtubePlaylists, setYoutubePlaylists] = useState([]); // contains the playlists in the user's YouTube account, so we can display them in a drowpdown menu
   const [destinationPlaylistId, setDestinationPlaylistId] = useState(''); // contains the id of the playlist that the user wants to copy tracks to
   const isDefault = (destinationPlaylistId === '');
@@ -106,8 +106,8 @@ export default function HomePage() {
     console.log("sourcePlaylistId: ", sourcePlaylistId);
     let destinationPlaylistIdLocal = '';
 
-    if(!destinationPlaylistId){
-      
+    if (!destinationPlaylistId) {
+
       const response = await fetch('http://127.0.0.1:3000/youtube/playlists', {
         method: 'POST',
         credentials: 'include',
@@ -153,168 +153,48 @@ export default function HomePage() {
   return (
     <div className="app-container">
       {
-        step === 1 && ( // User decides where they want their spotify tracks copied to:
-          <div>
-            <h3>Where are we moving music to?</h3>
-            <button
-              onClick={() => {
-                setDestination("new"); // user wants to create new playlist
-                setStep(step + 1);
-              }}
-            >Add tracks to NEW YouTube playlist</button>
-
-            <button
-              onClick={() => {
-                setDestination("existing"); // users wants to use existing playlist
-                setStep(step + 1);
-              }}
-            >
-              Add tracks to EXISTING YouTube playlist</button>
-          </div>
+        step === 1 && (
+          <Step1
+            setDestination={setDestination}
+            step={step}
+            setStep={setStep} />
         )
       }
       {
         step === 2 && (
-          <div>
-            <h2>Step 2: YouTube Setup</h2>
-
-            {destination === 'new' && ( // users wants to create a new playlist
-              <div>
-                <label>{"What should we name your new YouTube playlist? "}</label>
-
-                <input
-                  type="text"
-                  // e - event, e.target - the html element in which the event occurred, e.target.value - the current value inside the html element in which the event occurred.
-                  onBlur={(e) => { setDestinationPlaylistName(e.target.value) }}
-                  // placeholder value for the playlist's name
-                  placeholder="Playlist Name"
-                />
-
-                {hasInvalidChars && (
-                  <p> YouTube playlist connot contain characters: {"'<' or '>'"}</p>
-                )}
-
-                {isNameEmpty && (
-                  <p> YouTube playlist requires name </p>
-                )}
-
-                <div style={{ marginTop: '20px' }}>
-
-                  <button onClick={() => { // deselects the spotify playlist
-
-                    setDestinationPlaylistName('');
-                    setStep(step - 1);
-                  }}>Back</button>
-
-                  <button disabled={!isNameValid} onClick={() => {
-
-                    setStep(step + 1);
-                  }}>Next</button>
-
-                </div>
-              </div>
-            )}
-
-            {destination === 'existing' && ( // user wants to use an existing playlist
-              <div>
-                <label>Select an existing YouTube playlist:</label>
-                <select onChange={(e) => {
-                  const optionNum = e.target.selectedIndex; // gets the index of the option selected
-                  const selectedOption = e.target.options[optionNum]; // accesses the selectedOption using its index
-
-                  setDestinationPlaylistId(selectedOption.id); 
-                  setDestinationPlaylistName(selectedOption.title);
-                }}>
-                  <option>-- Select a Playlist --</option> {/* adds placeholder item to the dropdown menu */}
-                  {
-                    youtubePlaylists.map((pl) => ( // iterates over each playlist the youtubePlaylists state, making an option for them in the dropdown menu
-                      <option key={pl.id} id={pl.id} title={pl.title}>{pl.title}</option>
-                    ))}
-                </select>
-                <div style={{ marginTop: '20px' }}>
-
-                  <button onClick={() => { // deselects the spotify playlist
-
-                    setDestinationPlaylistName('');
-                    setSourcePlaylistName('');
-                    setStep(step - 1);
-                  }}>Back</button>
-
-                  <button disabled={isDefault} onClick={() => {
-
-                    setStep(step + 1);
-                  }}>Next</button>
-
-                </div>
-              </div>
-            )}
-
-          </div>
+          <Step2
+            destination={destination}
+            destinationPlaylistName={destinationPlaylistName}
+            setDestinationPlaylistName={setDestinationPlaylistName}
+            setDestinationPlaylistId={setDestinationPlaylistId}
+            youtubePlaylists={youtubePlaylists}
+            setSourcePlaylistName={setSourcePlaylistName}
+            isDefault={isDefault}
+            step={step}
+            setStep={setStep}
+          />
         )
       }
       {
         step === 3 && (
-          <div>
-            <h2>Step 3: Select Spotify playlist as Source</h2>
-            <div>
-              <label>Select your Spotify playlist to use as a source</label>
-              <select onChange={(e) => {
-                  const optionNum = e.target.selectedIndex; // gets the index of the option selected
-                  const selectedOption = e.target.options[optionNum]; // accesses the selectedOption using its index
-
-                  setSourcePlaylistId(selectedOption.id); 
-                  setSourcePlaylistName(selectedOption.title);
-              }}>
-                <option>-- Select a Playlist --</option> {/* placeholder */}
-                {
-                  spotifyPlaylists.map((pl) => (
-                    <option key={pl.id} id={pl.id} title={pl.title}>{pl.entry}</option>
-                  ))}
-              </select>
-            </div>
-            <div style={{ marginTop: '20px' }}>
-
-              <button onClick={() => { // deselects the spotify playlist
-                setStep(step - 1);
-              }}>Back</button>
-
-              <button disabled={isDefault2} onClick={() => {
-
-                setStep(step + 1);
-              }}>Next</button>
-
-            </div>
-          </div>
+          <Step3
+          setSourcePlaylistId={setSourcePlaylistId}
+          setSourcePlaylistName={setSourcePlaylistName}
+          spotifyPlaylists={spotifyPlaylists}
+          step={step}
+          setStep={setStep}
+          isDefault2={isDefault2}
+          />
         )
       }
       {
         step === 4 && (
-          <div>
-            <h2>Step 4: Confirm and Convert</h2>
-              <div>
-                <p>Source <strong>{sourcePlaylistName}</strong> </p>
-                <p>Destination <strong>{destinationPlaylistName}</strong></p>
-                <button onClick={handleConvert}>
-                  Convert
-                </button>
-                <div>
-
-                  Tracks we found on YouTube:
-                  {conversionResults.succeeded.map((item) => (
-                    <li key={item.spotifyTrack}>
-                      {item.spotifyTrack} as ${item.youtubeTitle}
-                    </li>                    
-                  ))}
-
-                  Tracks we couldn't find on YouTube:
-                  {conversionResults.failed.map((item) => (
-                    <li key={item.track}>
-                      {item.track} - {item.reason}
-                    </li>                    
-                  ))}
-                </div>
-              </div>
-          </div>
+          <Step4 
+          sourcePlaylistName={sourcePlaylistName}
+          destinationPlaylistName={destinationPlaylistName}
+          handleConvert={handleConvert}
+          conversionResults={conversionResults}
+          />
         )
       }
     </div>
