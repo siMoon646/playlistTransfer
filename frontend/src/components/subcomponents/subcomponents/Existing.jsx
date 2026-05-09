@@ -1,4 +1,5 @@
 import "../../../styling.css"
+import DropDownMenu from "../../DropDownMenu";
 
 export default function Existing({
 setDestinationPlaylistId,
@@ -12,21 +13,15 @@ isDefault
     return (
         <div className = "centered">
             <h1 className = "instructionHeader centered text" style = {{marginBottom: '5vh'}}>Select an existing YouTube playlist:</h1>
-            <select className="interactiveGlow selectPlaylist centered text" onChange={(e) => {
-                const optionNum = e.target.selectedIndex; // gets the index of the option selected
-                const selectedOption = e.target.options[optionNum]; // accesses the selectedOption using its index
+            
+            <DropDownMenu
+              playlists={youtubePlaylists}
+              setSourcePlaylistId={setDestinationPlaylistId}
+              setSourcePlaylistName={setDestinationPlaylistName}
+              placeholder="-- SELECT YOUTUBE PLAYLIST --"
+            />
 
-                setDestinationPlaylistId(selectedOption.id);
-                setDestinationPlaylistName(selectedOption.title);
-            }}>
-                <option className = "playlistOption centered text">-- Select a Playlist --</option> {/* adds placeholder item to the dropdown menu */}
-                {
-                    youtubePlaylists.map((pl) => ( // iterates over each playlist the youtubePlaylists state, making an option for them in the dropdown menu
-                        <option className = "playlistOption centered text" key={pl.id} id={pl.id} title={pl.title}>{pl.title}</option>
-                    ))}
-            </select>
             <div className = "navButtons">
-
                 <button className = "decisionButton interactiveGlow" onClick={() => { // deselects the spotify playlist
                     setDestinationPlaylistName('');
                     setSourcePlaylistName('');

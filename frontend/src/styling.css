@@ -18,7 +18,7 @@ body {
     font-family: 'Minefont';
     font-size: 1.5vw;
     color: white;
-    text-shadow: rgb(0,0,0) 0.1em 0.1em;
+    text-shadow: rgb(0,0,0) .5vh .5vh;
 }
 
 .interactiveGlow {
@@ -66,20 +66,13 @@ body {
     cursor: not-allowed;
 }
 
-.selectPlaylist {
-    background: rgba(255, 255, 255, 0.08);
-    padding: 1.5vh 1.4vw;
-    appearance: none;
-    max-height: calc(7 * 14px);
-    overflow-y: auto;
-}
-
 .namingInput {
     width: 30%;;
     background: rgba(255, 255, 255, 0.08);
     color: white;
-    padding-top: 8%;
-    padding-bottom: 8%
+    padding-bottom: 8%;
+    overflow: auto;
+    resize: none;
 }
 
 .navButtons{
@@ -90,6 +83,7 @@ body {
 
 .playlistOption {
     background-color: rgba(0,0,0, 0.80);
+    text-align: center;
 }
 
 .descriptionBox {
