@@ -27,7 +27,7 @@ export default function LoginPage() {
         }}
       >
         {/* Spotify Icon Section */}
-        <a href="http://127.0.0.1:3000/spotify/login">
+        <a href={`${import.meta.env.VITE_BACKEND_BASE_URL}/spotify/login`}>
           <img
             className="loginIcon interactiveGlow"
             src="spotify.png"
@@ -36,7 +36,7 @@ export default function LoginPage() {
         </a>
 
         {/* YouTube Icon Section */}
-        <a href="http://127.0.0.1:3000/youtube/login">
+        <a href={`${import.meta.env.VITE_BACKEND_BASE_URL}/youtube/login`}>
           <img
             className="loginIcon interactiveGlow"
             src="youtube.png"

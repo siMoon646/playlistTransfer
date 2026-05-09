@@ -50,10 +50,10 @@ export async function callback(req, res) {
         // stay in at frontend's login page if still not logged in with spotify -> app requires both accessTokens to function
         if(!req.session.youtubeAccessToken){
             // redirects to the frontend root.
-            res.redirect('http://127.0.0.1:5173/login'); 
+            res.redirect(`${process.env.FRONTEND_BASE_URL}/login`); 
         } else { // if have both access tokens -> go home page
             console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);
-            res.redirect("http://127.0.0.1:5173/home");
+            res.redirect(`${process.env.FRONTEND_BASE_URL}/home`);
         }
 
     console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);

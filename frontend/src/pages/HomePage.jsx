@@ -111,7 +111,7 @@ export default function HomePage() {
 
     if (!destinationPlaylistId) {
 
-      const response = await fetch('http://127.0.0.1:3000/youtube/playlists', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/youtube/playlists`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -130,7 +130,7 @@ export default function HomePage() {
     console.log("sourcePlaylistId: ", sourcePlaylistId);
 
     try {
-      const response = await fetch('http://127.0.0.1:3000/convert', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/convert`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
