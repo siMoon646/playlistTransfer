@@ -47,13 +47,11 @@ export async function callback(req, res) {
         // Used for getting a new token when the previous access token expires.
         req.session.youtubeRefreshToken = tokens.refresh_token;
         // if missing the the other token, stay on login
-        console.log()
         if(!req.session.spotifyAccessToken){
             // redirects to the frontend root.
             res.redirect(`${process.env.FRONTEND_BASE_URL}/login`);
         } else { // if have both access tokens -> go home page
             res.redirect(`${process.env.FRONTEND_BASE_URL}/home`);
-            console.log("passed3")
         }
         
     console.log("spotifyAccessToken: ", req.session.spotifyAccessToken, "\nyoutubeAccessToken: ", req.session.youtubeAccessToken);

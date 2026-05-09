@@ -6,7 +6,7 @@ import spotifyRoutes from './routes/spotifyRoutes.js'
 import youtubeRoutes from './routes/youtubeRoutes.js'
 import convertRoutes from './routes/convertRoutes.js'
 
-console.log('spotifyRoutes:', spotifyRoutes);
+app.set('trust proxy', 1);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +25,8 @@ app.use(express.json()); // Allows the server to read JSON data in POST requests
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
+  secure: true,
+  httpOnly: true,
   resave: false,
   saveUninitialized: false,
   cookie: {
