@@ -1,0 +1,147 @@
+@font-face {
+    font-family: "Minefont";
+    src: url(./assets/fonts/minecraftfont.woff) format("woff");
+}
+
+body {
+    background-color: rgb(20,20,20);
+}
+
+.centered {
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    font-family: 'Minefont';
+    font-size: 1.5vw;
+    color: white;
+    text-shadow: rgb(0,0,0) 0.1em 0.1em;
+}
+
+.interactiveGlow {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(0, 255, 255, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+    border: .1vw solid transparent;
+}
+
+.interactiveGlow:hover {
+    border-color: rgba(255, 255, 255, .6);
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 255, 255, .3),
+                0 0 60px rgba(0, 255, 255, .3);
+}
+
+.instructionHeader {
+    background-color: rgb(4,79,15);
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2),
+                0 0 40px rgba(0, 255, 255, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loginIcon {
+    width: 20vw;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+.decisionButton {
+    background-color: rgb(4,79,15);
+    color: white;
+    font-family: 'Minefont';
+    font-size: 1.5vw;
+    padding: 2vh 5vw;
+    cursor: pointer;
+    appearance: none;
+}
+
+.decisionButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.selectPlaylist {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1.5vh 1.4vw;
+    appearance: none;
+    max-height: calc(7 * 14px);
+    overflow-y: auto;
+}
+
+.namingInput {
+    width: 30%;;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    padding-top: 8%;
+    padding-bottom: 8%
+}
+
+.navButtons{
+    position: fixed;
+    bottom: 7vh;
+    width: 100%;
+}
+
+.playlistOption {
+    background-color: rgba(0,0,0, 0.80);
+}
+
+.descriptionBox {
+    box-sizing: border-box;
+    padding: 2vh 2vw;
+    background: rgba(255, 255, 255, 0.08);
+    line-height: 1.4;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    width: clamp(10vw, 50%, 60vw);
+}
+
+.resultsRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40vw;
+}
+
+.resultColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(36vw, 420px);
+    min-width: 260px;
+}
+
+.resultBox {
+    width: 30vw;
+}
+
+.resultBoxTitle {
+    margin-bottom: 1vh;
+    text-align: left;
+    font-size: 1.4vw;
+}
+
+.resultList {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.resultList li {
+    margin-bottom: 1vh;
+    padding: 1vh 1vw;
+    border-radius: 1vw;
+    background: rgba(255, 255, 255, 0.06);
+    text-align: left;
+}
+
+.decisionButton:hover + .descriptionBox,
+.interactiveGlow:hover + .descriptionBox {
+    transform: scale(1.03);
+    box-shadow: 0 0 14px rgba(255, 255, 255, .1),
+                0 0 28px rgba(0, 255, 255, .1);
+}

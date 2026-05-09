@@ -1,3 +1,5 @@
+import "../../../styling.css"
+
 export default function New({
     destinationPlaylistName,
     setDestinationPlaylistName,
@@ -10,35 +12,36 @@ export default function New({
     const isNameValid = !isNameEmpty && !hasInvalidChars && !isNameTooLong;
 
     return (
-        <div>
-            <label>{"What should we name your new YouTube playlist? "}</label>
+        <div className = "centered">
+            <h1 className = "instructionHeader text" style = {{marginBottom: "2vh"}}> What Is The Name Of This New Playlist? </h1>
 
-            <input
+            <textarea
+                className = "interactiveGlow centered text namingInput"
                 type="text"
                 // e - event, e.target - the html element in which the event occurred, e.target.value - the current value inside the html element in which the event occurred.
                 onBlur={(e) => { setDestinationPlaylistName(e.target.value) }}
                 // placeholder value for the playlist's name
-                placeholder="Playlist Name"
+                placeholder=""
             />
 
             {hasInvalidChars && (
-                <p> YouTube playlist connot contain characters: {"'<' or '>'"}</p>
+                <p className = "text centered" style = {{color: "red"}}> YouTube playlist connot contain characters: {"'<' or '>'"}</p>
             )}
 
             {isNameEmpty && (
-                <p> YouTube playlist requires name </p>
+                <p className = "centered text" style = {{color: "red"}}> YouTube playlist requires name </p>
             )}
 
-            <div style={{ marginTop: '20px' }}>
-
-                <button onClick={() => { // deselects the spotify playlist
-
+            <div className = "navButtons">
+                <button className = "decisionButton interactiveGlow" onClick={() => { // deselects the spotify playlist
                     setDestinationPlaylistName('');
                     setStep(step - 1);
                 }}>Back</button>
 
-                <button disabled={!isNameValid} onClick={() => {
-
+                <button 
+                style = {{ marginLeft: "30vw"}}
+                className = {"decisionButton " + (!isNameValid ? "" : "interactiveGlow")} 
+                disabled={!isNameValid} onClick={() => {
                     setStep(step + 1);
                 }}>Next</button>
 

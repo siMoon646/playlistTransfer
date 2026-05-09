@@ -14,8 +14,6 @@ export default function Step2({
 }) {
   return (
     <div>
-      <h2>Step 2: YouTube Setup</h2>
-
       {destination === "new" && ( // users wants to create a new playlist
         <New
           destinationPlaylistName={destinationPlaylistName}

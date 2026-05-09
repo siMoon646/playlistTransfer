@@ -1,8 +1,11 @@
+import "../styling.css"
 import { useState, useEffect } from 'react';
-import Step1 from "./subcomponents/Step1"
-import Step2 from "./subcomponents/Step2"
-import Step3 from "./subcomponents/Step3"
-import Step4 from "./subcomponents/Step4"
+import Step1 from "../components/subcomponents/Step1"
+import Step2 from "../components/subcomponents/Step2"
+import Step3 from "../components/subcomponents/Step3"
+import Step4 from "../components/subcomponents/Step4"
+import SiteHeader from "../components/SiteHeader.jsx";
+import Footer from "../components/Footer.jsx";
 
 export default function HomePage() {
   const [step, setStep] = useState(1); // represents where the user is in the decision-making process
@@ -152,6 +155,7 @@ export default function HomePage() {
 
   return (
     <div className="app-container">
+      <SiteHeader/>
       {
         step === 1 && (
           <Step1
@@ -180,6 +184,8 @@ export default function HomePage() {
           <Step3
           setSourcePlaylistId={setSourcePlaylistId}
           setSourcePlaylistName={setSourcePlaylistName}
+          setDestinationPlaylistId={setDestinationPlaylistId}
+          setDestinationPlaylistName={setDestinationPlaylistName}
           spotifyPlaylists={spotifyPlaylists}
           step={step}
           setStep={setStep}
@@ -197,6 +203,7 @@ export default function HomePage() {
           />
         )
       }
+      <Footer />
     </div>
   );
 }
