@@ -40,8 +40,7 @@ body {
     background-color: rgb(4,79,15);
     padding-top: 2vh;
     padding-bottom: 2vh;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2),
-                0 0 40px rgba(0, 255, 255, 0.25);
+    text-shadow: rgb(0,0,0) .5vh .5vh;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
