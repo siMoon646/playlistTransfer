@@ -25,13 +25,12 @@ app.use(express.json()); // Allows the server to read JSON data in POST requests
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  secure: true,
-  httpOnly: true,
   resave: false,
   saveUninitialized: false,
   cookie: {
-        secure: false, // false for localhost (no HTTPS)
-        sameSite: 'lax',
+        secure: true, // false for localhost (no HTTPS)
+        sameSite: 'none',
+        httpOnly: true,
     }
 }))
 
