@@ -66,6 +66,8 @@ export async function callback(req, res) {
 }
 
 export async function getPlaylists(req, res) {
+    console.log("spotifyAccessToken: ", req.session.spotifyAccessToken);
+
     // if there is no access token -> user is not logged in
     if (!req.session.spotifyAccessToken) {
         // 401 -> you need to be logged in to do this

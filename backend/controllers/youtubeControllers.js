@@ -89,10 +89,10 @@ export async function search(req, res) {
 export async function getPlaylists(req, res) {
     console.log("\n--YouTube getPlaylists function called--\n");
 
-    console.log(req.session.youtubeAccessToken);
+    console.log("youtubeAccessToken: ", req.session.youtubeAccessToken);
 
     if (!req.session.youtubeAccessToken) {
-        return res.status(401).json({ error: "yeah, Not logged in" });
+        return res.status(401).json({ error: "Not logged in" });
     }
 
     try {
