@@ -27,12 +27,12 @@ export default function HomePage() {
 
   /** returns the user's YouTube playlists in an array */
   async function getYoutubePlaylists() {
-    const response = await fetch('http://127.0.0.1:3000/youtube/playlists', { credentials: 'include' });
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/youtube/playlists`, { credentials: 'include' });
     const data = await response.json();
-    // console.log(data);
+
     const playlistNames = data.map((obj) => ({
-      title: obj.snippet.title,
       id: obj.id,
+      title: obj.snippet.title,
     }))
     // console.log("data:", data);
     // console.log("youtube playlists: ", playlistNames);
@@ -57,7 +57,7 @@ export default function HomePage() {
 
   /** returns the user's spotify playlists in an array */
   async function getSpotifyPlaylists() {
-    const response = await fetch('http://127.0.0.1:3000/spotify/playlists', { credentials: 'include' });
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URL}/spotify/playlists`, { credentials: 'include' });
     const playlists = await response.json();
 
     const playlistNames = playlists.map((playlist) => ({

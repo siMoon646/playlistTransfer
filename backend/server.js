@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 
 // Middleware
 app.use(cors({
-  origin: 'http://127.0.0.1:5173',
+  origin: process.env.FRONTEND_BASE_URL, // Allow requests from your React app's URL
   credentials: true
 })); // Allows your React app to communicate with this server
 app.use(express.json()); // Allows the server to read JSON data in POST requests

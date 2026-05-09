@@ -5,7 +5,7 @@ export default function Footer(){
                 color: 'gray',
                 position: 'fixed', 
                 bottom: '0',
-                'font-size': '1vw',
+                'fontSize': '1vw',
             }}> ©2025 All Rights Reserved </p>
         </footer>
     )

@@ -17,7 +17,7 @@ import { useState, useRef, useEffect } from "react";
  
 const ITEM_HEIGHT = 36; /* px — height of each option row */
  
-export default function PixelSelect({
+export default function DropDownMenu({
   playlists,
   setSourcePlaylistId,
   setSourcePlaylistName,
@@ -102,7 +102,6 @@ export default function PixelSelect({
             fontFamily: "Minefont",
             fontSize: "1vw",
             scrollbarWidth: "thin",
-            scrollbarColor: "#rgb(0,0,0)"
           }}
         >
           {playlists.map((playlist, i) => {
