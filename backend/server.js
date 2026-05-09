@@ -48,6 +48,6 @@ app.get('/', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Server is running on http://127.0.0.1:${PORT}`);
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+    console.log('Server is running on port ' + (process.env.PORT || 3000));
 });
