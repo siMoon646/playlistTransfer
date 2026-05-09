@@ -6,10 +6,10 @@ import spotifyRoutes from './routes/spotifyRoutes.js'
 import youtubeRoutes from './routes/youtubeRoutes.js'
 import convertRoutes from './routes/convertRoutes.js'
 
-app.set('trust proxy', 1);
-
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.set('trust proxy', 1);
 
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.url}`);
