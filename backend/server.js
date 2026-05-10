@@ -9,8 +9,6 @@ import convertRoutes from './routes/convertRoutes.js'
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.set('trust proxy', 1);
-
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.url}`);
     next();
@@ -28,9 +26,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-        secure: true, // false for localhost (no HTTPS)
-        sameSite: 'none',
-        httpOnly: true,
+        secure: false, // false for localhost (no HTTPS)
+        sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000
     }
 }))
